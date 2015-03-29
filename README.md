@@ -17,6 +17,10 @@ Inputs:
   * networkprefix - The first 2 octets of the IP address for this VPC. E.g. 10.84
 
 Outputs:
+  * region
+  * account
+  * primary-az
+  * secondary-az
   * primary-az-frontsubnet
   * primary-az-dedicatedsubnet
   * primary-az-ephemeralsubnet

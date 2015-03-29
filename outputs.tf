@@ -1,3 +1,15 @@
+output "region" {
+  value = "${var.region}"
+}
+output "account" {
+  value = "${var.account}"
+}
+output "primary-az" {
+  value = "${module.azs.primary}"
+}
+output "secondary-az" {
+  value = "${module.azs.secondary}"
+}
 output "primary-az-frontsubnet" {
   value = "${aws_subnet.front-primary.id}"
 }

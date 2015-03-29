@@ -27,11 +27,17 @@ resource "aws_route_table" "public" {
     }
 }
 
+module "azs" {
+    source = "github.com/bobtfish/terraform-azs"
+    account = "${var.account}"
+    region = "${var.region}"
+}
+
 resource "aws_subnet" "front-primary" {
     vpc_id = "${aws_vpc.main.id}"
     cidr_block = "${var.networkprefix}.0.0/24"
     map_public_ip_on_launch = true
-    availability_zone = "${var.region}a"
+    availability_zone = "${module.azs.primary}"
 
     tags {
         Name = "primary az front dedicated"
@@ -46,7 +52,7 @@ resource "aws_route_table_association" "front-primary" {
 resource "aws_subnet" "back-primary" {
     vpc_id = "${aws_vpc.main.id}"
     cidr_block = "${var.networkprefix}.1.0/24"
-    availability_zone = "${var.region}a"
+    availability_zone = "${module.azs.primary}"
 
     tags {
         Name = "primary az back dedicated"
@@ -57,7 +63,7 @@ resource "aws_subnet" "front-secondary" {
     vpc_id = "${aws_vpc.main.id}"
     cidr_block = "${var.networkprefix}.2.0/24"
     map_public_ip_on_launch = true
-    availability_zone = "${var.region}b"
+    availability_zone = "${module.azs.secondary}"
 
     tags {
         Name = "secondary az front dedicated"
@@ -72,7 +78,7 @@ resource "aws_route_table_association" "front-secondary" {
 resource "aws_subnet" "back-secondary" {
     vpc_id = "${aws_vpc.main.id}"
     cidr_block = "${var.networkprefix}.3.0/24"
-    availability_zone = "${var.region}b"
+    availability_zone = "${module.azs.secondary}"
 
     tags {
         Name = "secondary az back dedicated"
@@ -82,7 +88,7 @@ resource "aws_subnet" "back-secondary" {
 resource "aws_subnet" "ephemeral-primary" {
     vpc_id = "${aws_vpc.main.id}"
     cidr_block = "${var.networkprefix}.64.0/28"
-    availability_zone = "${var.region}a"
+    availability_zone = "${module.azs.primary}"
 
     tags {
         Name = "primary az back ephemeral"
@@ -92,7 +98,7 @@ resource "aws_subnet" "ephemeral-primary" {
 resource "aws_subnet" "ephemeral-secondary" {
   vpc_id = "${aws_vpc.main.id}"
     cidr_block = "${var.networkprefix}.128.0/28"
-    availability_zone = "${var.region}b"
+    availability_zone = "${module.azs.secondary}"
 
     tags {
         Name = "secondary az back ephemeral"
