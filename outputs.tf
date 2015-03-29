@@ -17,7 +17,7 @@ output "secondary-az-ephemeralsubnet" {
     value = "${aws_subnet.ephemeral-secondary.id}"
 }
 output "public-routetable" {
-    value = "${aws_routetable.public.id}"
+    value = "${aws_route_table.public.id}"
 }
 output "id" {
     value = "${aws_vpc.main.id}"
