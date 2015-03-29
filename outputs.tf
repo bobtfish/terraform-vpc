@@ -16,7 +16,7 @@ output "secondary-az-dedicatedsubnet" {
 output "secondary-az-ephemeralsubnet" {
     value = "${aws_subnet.ephemeral-secondary.id}"
 }
-output "public-routeable" {
+output "public-routetable" {
     value = "${aws_routetable.public.id}"
 }
 output "id" {
