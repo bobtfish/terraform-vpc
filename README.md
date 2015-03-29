@@ -24,4 +24,9 @@ Outputs:
   * secondary-az-dedicatedsubnet
   * secondary-az-ephemeralsubnet
   * public-routetable
+  * id - the vpc id
+  * cidr_block
+  * main_route_table_id
+  * default_network_acl_id
+  * default_security_group_id
 
