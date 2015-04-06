@@ -87,7 +87,7 @@ resource "aws_subnet" "back-secondary" {
 
 resource "aws_subnet" "ephemeral-primary" {
     vpc_id = "${aws_vpc.main.id}"
-    cidr_block = "${var.networkprefix}.64.0/28"
+    cidr_block = "${var.networkprefix}.64.0/18"
     availability_zone = "${module.azs.primary}"
 
     tags {
@@ -97,7 +97,7 @@ resource "aws_subnet" "ephemeral-primary" {
 
 resource "aws_subnet" "ephemeral-secondary" {
   vpc_id = "${aws_vpc.main.id}"
-    cidr_block = "${var.networkprefix}.128.0/28"
+    cidr_block = "${var.networkprefix}.128.0/18"
     availability_zone = "${module.azs.secondary}"
 
     tags {
