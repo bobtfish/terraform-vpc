@@ -7,6 +7,9 @@ output "account" {
 output "azs" {
   value = "${module.azs.list_all}"
 }
+output "az_letters" {
+  value = "${module.azs.list_letters}"
+}
 output "az_count" {
   value = "${module.azs.az_count}"
 }
