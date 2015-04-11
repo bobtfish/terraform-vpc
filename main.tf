@@ -63,6 +63,7 @@ resource "aws_subnet" "back" {
 }
 
 resource "aws_subnet" "ephemeral" {
+    count = "${module.azs.az_count}"
     vpc_id = "${aws_vpc.main.id}"
     cidr_block = "${var.networkprefix}.${64*(count.index+1)}.0/18"
     availability_zone = "${element(split(\",\", module.azs.list_all), count.index)}"
