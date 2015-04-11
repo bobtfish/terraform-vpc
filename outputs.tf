@@ -8,7 +8,7 @@ output "azs" {
   value = "${module.azs.list_all}"
 }
 output "az_count" {
-  value = "${module.azs.count}"
+  value = "${module.azs.az_count}"
 }
 output "frontsubnets" {
   value = "${join(\",\", aws_subnet.front.*.id)}"
