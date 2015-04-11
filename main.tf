@@ -62,7 +62,7 @@ resource "aws_subnet" "back" {
     }
 }
 
-resource "aws_subnet" "ephemeral-primary" {
+resource "aws_subnet" "ephemeral" {
     vpc_id = "${aws_vpc.main.id}"
     cidr_block = "${var.networkprefix}.${64*count.index}.0/18"
     availability_zone = "${element(split(\",\", module.azs.list_all), count.index)}"
