@@ -28,79 +28,47 @@ resource "aws_route_table" "public" {
 }
 
 module "azs" {
-    source = "github.com/bobtfish/terraform-azs"
+    source = "github.com/terraform-community-modules/tf_aws_availability_zones"
     account = "${var.account}"
     region = "${var.region}"
 }
 
-resource "aws_subnet" "front-primary" {
+resource "aws_subnet" "front" {
+    count = "${toint(module.azs.count)}"
     vpc_id = "${aws_vpc.main.id}"
-    cidr_block = "${var.networkprefix}.0.0/24"
+    cidr_block = "${var.networkprefix}.${count.index}.0/24"
     map_public_ip_on_launch = true
-    availability_zone = "${module.azs.primary}"
+    availability_zone = "${element(split(\",\", module.azs.list_all), count.index)}"
 
     tags {
-        Name = "primary az front dedicated"
+        Name = "az ${count.index} front dedicated"
     }
 }
 
-resource "aws_route_table_association" "front-primary" {
-    subnet_id = "${aws_subnet.front-primary.id}"
+resource "aws_route_table_association" "front" {
+    count = "${toint(module.azs.count)}"
+    subnet_id = "${element(aws_subnet.front.*.id, count.index)}"
     route_table_id = "${aws_route_table.public.id}"
 }
 
-resource "aws_subnet" "back-primary" {
+resource "aws_subnet" "back" {
+    count = "${toint(module.azs.count)}"
     vpc_id = "${aws_vpc.main.id}"
-    cidr_block = "${var.networkprefix}.1.0/24"
-    availability_zone = "${module.azs.primary}"
+    cidr_block = "${var.networkprefix}.${count.index+10}.0/24"
+    availability_zone = "${element(split(\",\", module.azs.list_all), count.index)}"
 
     tags {
-        Name = "primary az back dedicated"
-    }
-}
-
-resource "aws_subnet" "front-secondary" {
-    vpc_id = "${aws_vpc.main.id}"
-    cidr_block = "${var.networkprefix}.2.0/24"
-    map_public_ip_on_launch = true
-    availability_zone = "${module.azs.secondary}"
-
-    tags {
-        Name = "secondary az front dedicated"
-    }
-}
-
-resource "aws_route_table_association" "front-secondary" {
-    subnet_id = "${aws_subnet.front-secondary.id}"
-    route_table_id = "${aws_route_table.public.id}"
-}
-
-resource "aws_subnet" "back-secondary" {
-    vpc_id = "${aws_vpc.main.id}"
-    cidr_block = "${var.networkprefix}.3.0/24"
-    availability_zone = "${module.azs.secondary}"
-
-    tags {
-        Name = "secondary az back dedicated"
+        Name = "az ${count.index} back dedicated"
     }
 }
 
 resource "aws_subnet" "ephemeral-primary" {
     vpc_id = "${aws_vpc.main.id}"
-    cidr_block = "${var.networkprefix}.64.0/18"
-    availability_zone = "${module.azs.primary}"
+    cidr_block = "${var.networkprefix}.${64*count.index}.0/18"
+    availability_zone = "${element(split(\",\", module.azs.list_all), count.index)}"
 
     tags {
-        Name = "primary az back ephemeral"
+        Name = "az ${count.index} back ephemeral"
     }
 }
 
-resource "aws_subnet" "ephemeral-secondary" {
-  vpc_id = "${aws_vpc.main.id}"
-    cidr_block = "${var.networkprefix}.128.0/18"
-    availability_zone = "${module.azs.secondary}"
-
-    tags {
-        Name = "secondary az back ephemeral"
-    }
-}
