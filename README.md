@@ -19,14 +19,10 @@ Inputs:
 Outputs:
   * region
   * account
-  * primary-az
-  * secondary-az
-  * primary-az-frontsubnet
-  * primary-az-dedicatedsubnet
-  * primary-az-ephemeralsubnet
-  * secondary-az-frontsubnet
-  * secondary-az-dedicatedsubnet
-  * secondary-az-ephemeralsubnet
+  * azs
+  * frontsubnets
+  * dedicatedsubnets
+  * ephemeralsubnets
   * public-routetable
   * id - the vpc id
   * cidr_block
