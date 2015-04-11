@@ -20,6 +20,7 @@ Outputs:
   * region
   * account
   * azs
+  * az_count
   * frontsubnets
   * dedicatedsubnets
   * ephemeralsubnets
