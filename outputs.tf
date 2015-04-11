@@ -4,29 +4,17 @@ output "region" {
 output "account" {
   value = "${var.account}"
 }
-output "primary-az" {
-  value = "${module.azs.primary}"
+output "azs" {
+  value = "${module.azs.list_all}"
 }
-output "secondary-az" {
-  value = "${module.azs.secondary}"
+output "frontsubnets"
+  value = "${join(\",\", aws_subnet.front.*.id)}"
 }
-output "primary-az-frontsubnet" {
-  value = "${aws_subnet.front-primary.id}"
+output "dedicatedsubnets" {
+    value = "${join(\",\", aws_subnet.back.*.id)}"
 }
-output "primary-az-dedicatedsubnet" {
-    value = "${aws_subnet.back-primary.id}"
-}
-output "primary-az-ephemeralsubnet" {
-    value = "${aws_subnet.ephemeral-primary.id}"
-}
-output "secondary-az-frontsubnet" {
-    value = "${aws_subnet.front-secondary.id}"
-}
-output "secondary-az-dedicatedsubnet" {
-    value = "${aws_subnet.back-secondary.id}"
-}
-output "secondary-az-ephemeralsubnet" {
-    value = "${aws_subnet.ephemeral-secondary.id}"
+output "ephemeralsubnets" {
+    value = "${join(\",\", aws_subnet.ephemeral.*.id)}"
 }
 output "public-routetable" {
     value = "${aws_route_table.public.id}"
