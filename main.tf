@@ -34,7 +34,7 @@ module "azs" {
 }
 
 resource "aws_subnet" "front" {
-    count = "${toint(module.azs.count)}"
+    count = "${module.azs.count}"
     vpc_id = "${aws_vpc.main.id}"
     cidr_block = "${var.networkprefix}.${count.index}.0/24"
     map_public_ip_on_launch = true
@@ -46,13 +46,13 @@ resource "aws_subnet" "front" {
 }
 
 resource "aws_route_table_association" "front" {
-    count = "${toint(module.azs.count)}"
+    count = "${module.azs.count}"
     subnet_id = "${element(aws_subnet.front.*.id, count.index)}"
     route_table_id = "${aws_route_table.public.id}"
 }
 
 resource "aws_subnet" "back" {
-    count = "${toint(module.azs.count)}"
+    count = "${module.azs.count}"
     vpc_id = "${aws_vpc.main.id}"
     cidr_block = "${var.networkprefix}.${count.index+10}.0/24"
     availability_zone = "${element(split(\",\", module.azs.list_all), count.index)}"
