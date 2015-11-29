@@ -4,14 +4,11 @@ output "region" {
 output "account" {
   value = "${var.account}"
 }
-output "azs" {
-  value = "${module.azs.list_all}"
-}
-output "az_letters" {
-  value = "${module.azs.list_letters}"
+output "az_list" {
+  value = "${var.az_list}"
 }
 output "az_count" {
-  value = "${module.azs.az_count}"
+  value = "${var.az_count}"
 }
 output "frontsubnets" {
   value = "${join(\",\", aws_subnet.front.*.id)}"
