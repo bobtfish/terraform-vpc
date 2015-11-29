@@ -34,11 +34,11 @@ module "azs" {
 }
 
 resource "aws_subnet" "front" {
-    count = "2" // FIXME ${module.azs.az_count}"
+    count = "${var.az_count}"
     vpc_id = "${aws_vpc.main.id}"
     cidr_block = "${var.networkprefix}.${count.index}.0/24"
     map_public_ip_on_launch = true
-    availability_zone = "${element(split(\",\", module.azs.list_all), count.index)}"
+    availability_zone = "${element(split(\",\", var.az_list), count.index)}"
 
     tags {
         Name = "az ${count.index} front dedicated"
@@ -46,16 +46,16 @@ resource "aws_subnet" "front" {
 }
 
 resource "aws_route_table_association" "front" {
-    count = "2" // FIXME ${module.azs.az_count}"
+    count = "${var.az_count}"
     subnet_id = "${element(aws_subnet.front.*.id, count.index)}"
     route_table_id = "${aws_route_table.public.id}"
 }
 
 resource "aws_subnet" "back" {
-    count = "2" // FIXME ${module.azs.az_count}"
+    count = "${var.az_count}"
     vpc_id = "${aws_vpc.main.id}"
     cidr_block = "${var.networkprefix}.${count.index+10}.0/24"
-    availability_zone = "${element(split(\",\", module.azs.list_all), count.index)}"
+    availability_zone = "${element(split(\",\", var.az_list), count.index)}"
 
     tags {
         Name = "az ${count.index} back dedicated"
@@ -63,13 +63,15 @@ resource "aws_subnet" "back" {
 }
 
 resource "aws_subnet" "ephemeral" {
-    count = "2" // FIXME ${module.azs.az_count}"
+    count = "${var.az_count}"
     vpc_id = "${aws_vpc.main.id}"
     cidr_block = "${var.networkprefix}.${64*(count.index+1)}.0/18"
-    availability_zone = "${element(split(\",\", module.azs.list_all), count.index)}"
+    availability_zone = "${element(split(\",\", var.az_list), count.index)}"
 
     tags {
         Name = "az ${count.index} back ephemeral"
+        type = "private"
+        
     }
 }
 
